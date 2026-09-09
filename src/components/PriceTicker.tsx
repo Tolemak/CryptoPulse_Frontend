@@ -1,0 +1,51 @@
+import { useT } from '../i18n';
+import type { AggregatedPrice } from '../types';
+
+const formatPrice = (value: number) =>
+  value.toLocaleString('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 2 });
+
+const formatTime = (iso: string) => new Date(iso).toLocaleTimeString();
+
+interface Props {
+  prices: AggregatedPrice[];
+  loading: boolean;
+  error: string | null;
+}
+
+export function PriceTicker({ prices, loading, error }: Props) {
+  const t = useT();
+
+  if (error) {
+    return <p className="status status-error">{t.prices.error.replace('{error}', error)}</p>;
+  }
+
+  if (loading) {
+    return <p className="status">{t.prices.loading}</p>;
+  }
+
+  if (prices.length === 0) {
+    return <p className="status">{t.prices.empty}</p>;
+  }
+
+  return (
+    <div className="price-grid">
+      {prices.map((price) => (
+        <article key={price.pair} className="price-card">
+          <header>
+            <h3>{price.pair.replace('_', ' / ')}</h3>
+            <span className="price-median">{formatPrice(price.median)}</span>
+          </header>
+          <ul className="price-breakdown">
+            {price.breakdown.map((quote) => (
+              <li key={quote.exchange}>
+                <span className="exchange-name">{quote.exchange}</span>
+                <span>{formatPrice(quote.price)}</span>
+              </li>
+            ))}
+          </ul>
+          <footer>{t.prices.updated.replace('{time}', formatTime(price.updatedAt))}</footer>
+        </article>
+      ))}
+    </div>
+  );
+}
