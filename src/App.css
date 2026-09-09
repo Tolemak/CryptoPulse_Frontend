@@ -8,7 +8,7 @@
 
 .app-header p {
   color: var(--text);
-  margin-top: 4px;
+  margin-top: 8px;
 }
 
 .app-header-top {
@@ -19,6 +19,7 @@
 
 .app-header-top h1 {
   margin: 0;
+  line-height: 1.1;
 }
 
 .lang-btn {
