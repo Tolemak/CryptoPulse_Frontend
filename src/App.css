@@ -22,6 +22,11 @@
   line-height: 1.1;
 }
 
+.app-header-actions {
+  display: flex;
+  gap: 8px;
+}
+
 .lang-btn {
   font: inherit;
   font-size: 13px;
@@ -146,6 +151,20 @@ section h2 {
 .exchange-name {
   text-transform: capitalize;
   color: var(--text);
+}
+
+.price-ath {
+  margin: 10px 0 0;
+  font-size: 13px;
+  color: var(--text);
+}
+
+.pct-up {
+  color: #2fb170;
+}
+
+.pct-down {
+  color: #e35d5d;
 }
 
 .price-card footer {

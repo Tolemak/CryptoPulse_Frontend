@@ -3,10 +3,13 @@ import './App.css';
 import { PriceTicker } from './components/PriceTicker';
 import { usePrices } from './hooks/usePrices';
 import { LangContext, useLang, useT, type Lang, type LangContextType } from './i18n';
+import { ThemeProvider, useTheme } from './contexts/ThemeContext';
+import { radialViewTransition } from './utils/viewTransition';
 
 function Dashboard() {
   const t = useT();
   const { lang, setLang } = useLang();
+  const { theme, toggleTheme } = useTheme();
   const {
     prices,
     loading,
@@ -30,9 +33,20 @@ function Dashboard() {
       <header className="app-header">
         <div className="app-header-top">
           <h1>{t.app.title}</h1>
-          <button type="button" className="lang-btn" onClick={() => setLang(lang === 'pl' ? 'en' : 'pl')}>
-            {lang === 'pl' ? 'EN' : 'PL'}
-          </button>
+          <div className="app-header-actions">
+            <button
+              type="button"
+              className="lang-btn"
+              onClick={(e) => radialViewTransition(e.clientX, e.clientY, toggleTheme)}
+              aria-label={theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}
+              title={theme === 'dark' ? 'Light mode' : 'Dark mode'}
+            >
+              {theme === 'dark' ? '🌙' : '☀️'}
+            </button>
+            <button type="button" className="lang-btn" onClick={() => setLang(lang === 'pl' ? 'en' : 'pl')}>
+              {lang === 'pl' ? 'EN' : 'PL'}
+            </button>
+          </div>
         </div>
         <p>{t.app.subtitle}</p>
       </header>
@@ -71,9 +85,11 @@ function App() {
   const contextValue = useMemo(() => ({ lang, setLang }), [lang, setLang]);
 
   return (
-    <LangContext.Provider value={contextValue}>
-      <Dashboard />
-    </LangContext.Provider>
+    <ThemeProvider>
+      <LangContext.Provider value={contextValue}>
+        <Dashboard />
+      </LangContext.Provider>
+    </ThemeProvider>
   );
 }
 

@@ -5,6 +5,9 @@ const formatPrice = (value: number) =>
   value.toLocaleString('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 2 });
 
 const formatTime = (iso: string) => new Date(iso).toLocaleTimeString();
+const formatDate = (iso: string) => new Date(iso).toLocaleDateString();
+
+const formatPct = (value: number) => `${value > 0 ? '+' : ''}${value.toFixed(2)}%`;
 
 interface Props {
   prices: AggregatedPrice[];
@@ -43,6 +46,23 @@ export function PriceTicker({ prices, loading, error }: Props) {
               </li>
             ))}
           </ul>
+          <p className="price-ath">
+            {price.athPrice !== null ? (
+              <>
+                {t.prices.ath
+                  .replace('{price}', formatPrice(price.athPrice))
+                  .replace('{date}', price.athDate ? formatDate(price.athDate) : '?')}
+                {price.pctFromAth !== null && (
+                  <span className={price.pctFromAth < 0 ? 'pct-down' : 'pct-up'}>
+                    {' '}
+                    ({t.prices.pctFromAth.replace('{pct}', formatPct(price.pctFromAth))})
+                  </span>
+                )}
+              </>
+            ) : (
+              t.prices.athUnavailable
+            )}
+          </p>
           <footer>{t.prices.updated.replace('{time}', formatTime(price.updatedAt))}</footer>
         </article>
       ))}
