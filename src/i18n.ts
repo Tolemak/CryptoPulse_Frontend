@@ -22,6 +22,8 @@ export const translations = {
       refreshing: 'Odświeżanie…',
       refreshCooldown: 'Odśwież ({seconds}s)',
       refreshNotice: 'Ktoś już niedawno odświeżył — spróbuj ponownie za chwilę.',
+      showMore: 'Pokaż pozostałe ({count})',
+      showLess: 'Pokaż mniej',
     },
   },
   en: {
@@ -43,6 +45,8 @@ export const translations = {
       refreshing: 'Refreshing…',
       refreshCooldown: 'Refresh ({seconds}s)',
       refreshNotice: 'A refresh was already requested recently — try again shortly.',
+      showMore: 'Show the rest ({count})',
+      showLess: 'Show less',
     },
   },
 };

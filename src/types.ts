@@ -47,6 +47,7 @@ export interface AggregatedPrice {
   athPrice: number | null;
   athDate: string | null;
   pctFromAth: number | null;
+  marketCap: number | null;
 }
 
 export interface ApiErrorBody {

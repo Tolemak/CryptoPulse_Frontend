@@ -174,6 +174,25 @@ section h2 {
   opacity: 0.7;
 }
 
+.show-more-btn {
+  display: block;
+  margin: 20px auto 0;
+  font: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  padding: 8px 18px;
+  border-radius: 6px;
+  border: 1px solid var(--border);
+  background: transparent;
+  color: var(--text-h);
+  cursor: pointer;
+}
+
+.show-more-btn:hover {
+  border-color: var(--accent-border);
+  color: var(--accent);
+}
+
 .app-footer {
   margin-top: auto;
   padding-top: 20px;
