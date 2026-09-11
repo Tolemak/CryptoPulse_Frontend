@@ -17,11 +17,37 @@ afterEach(() => {
   vi.unstubAllGlobals();
 });
 
+const VALID_PRICE = {
+  pair: 'BTC_USD',
+  median: 65000,
+  breakdown: [],
+  updatedAt: '2026-01-01T00:00:00Z',
+  athPrice: 73000,
+  athDate: '2024-03-14T00:00:00Z',
+  pctFromAth: -10.96,
+  marketCap: 1_280_000_000_000,
+};
+
 describe('getPrices', () => {
   it('returns the decoded payload', async () => {
+    mockFetch({ json: () => Promise.resolve([VALID_PRICE]) });
+
+    await expect(getPrices()).resolves.toEqual([VALID_PRICE]);
+  });
+
+  it('rejects a payload that does not look like AggregatedPrice[]', async () => {
     mockFetch({ json: () => Promise.resolve([{ pair: 'BTC_USD' }]) });
 
-    await expect(getPrices()).resolves.toEqual([{ pair: 'BTC_USD' }]);
+    await expect(getPrices()).rejects.toMatchObject({
+      name: 'ApiError',
+      message: 'Received malformed price data from the API.',
+    });
+  });
+
+  it('rejects a non-array payload', async () => {
+    mockFetch({ json: () => Promise.resolve({ not: 'an array' }) });
+
+    await expect(getPrices()).rejects.toMatchObject({ name: 'ApiError' });
   });
 
   it('requests the prices endpoint with GET', async () => {

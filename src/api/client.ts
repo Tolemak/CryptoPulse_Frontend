@@ -35,6 +35,36 @@ async function request<T>(path: string, method: 'GET' | 'POST' = 'GET'): Promise
   return response.json();
 }
 
-export const getPrices = (): Promise<AggregatedPrice[]> => request<AggregatedPrice[]>('/api/prices');
+function isAggregatedPrice(value: unknown): value is AggregatedPrice {
+  if (typeof value !== 'object' || value === null) {
+    return false;
+  }
+  const p = value as Record<string, unknown>;
 
-export const refreshPrices = (): Promise<AggregatedPrice[]> => request<AggregatedPrice[]>('/api/prices/refresh', 'POST');
+  return (
+    typeof p.pair === 'string' &&
+    typeof p.median === 'number' &&
+    Array.isArray(p.breakdown) &&
+    typeof p.updatedAt === 'string' &&
+    (p.athPrice === null || typeof p.athPrice === 'number') &&
+    (p.athDate === null || typeof p.athDate === 'string') &&
+    (p.pctFromAth === null || typeof p.pctFromAth === 'number') &&
+    (p.marketCap === null || typeof p.marketCap === 'number')
+  );
+}
+
+function validatePrices(data: unknown): AggregatedPrice[] {
+  if (!Array.isArray(data) || !data.every(isAggregatedPrice)) {
+    throw new ApiError('Received malformed price data from the API.', 502);
+  }
+
+  return data;
+}
+
+async function requestPrices(path: string, method: 'GET' | 'POST'): Promise<AggregatedPrice[]> {
+  return validatePrices(await request<unknown>(path, method));
+}
+
+export const getPrices = (): Promise<AggregatedPrice[]> => requestPrices('/api/prices', 'GET');
+
+export const refreshPrices = (): Promise<AggregatedPrice[]> => requestPrices('/api/prices/refresh', 'POST');
