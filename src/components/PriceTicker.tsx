@@ -1,27 +1,10 @@
 import { useState } from 'react';
 import { useT } from '../i18n';
 import type { AggregatedPrice } from '../types';
+import { formatDate, formatPct, formatPrice, formatTime } from '../utils/format';
 
 const COLLAPSED_COUNT = 10;
 
-// Below $1 a flat 2 decimals rounds sub-cent coins (e.g. SHIB) to $0.00 - show
-// enough decimals for 2 significant digits instead, same as above $1.
-const formatPrice = (value: number) => {
-  const abs = Math.abs(value);
-  const maximumFractionDigits = abs > 0 && abs < 1 ? Math.max(2, 1 - Math.floor(Math.log10(abs))) : 2;
-
-  return value.toLocaleString('en-US', {
-    style: 'currency',
-    currency: 'USD',
-    minimumFractionDigits: Math.min(2, maximumFractionDigits),
-    maximumFractionDigits,
-  });
-};
-
-const formatTime = (iso: string) => new Date(iso).toLocaleTimeString();
-const formatDate = (iso: string) => new Date(iso).toLocaleDateString();
-
-const formatPct = (value: number) => `${value > 0 ? '+' : ''}${value.toFixed(2)}%`;
 
 interface Props {
   prices: AggregatedPrice[];

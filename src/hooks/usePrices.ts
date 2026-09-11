@@ -27,6 +27,9 @@ export function usePrices() {
   }, []);
 
   useEffect(() => {
+    // load() is async, so nothing is set before the first await - the lint rule
+    // does not follow the call across that boundary.
+    // oxlint-disable-next-line react/set-state-in-effect
     load();
     const interval = setInterval(load, POLL_INTERVAL_MS);
     return () => clearInterval(interval);

@@ -3,7 +3,8 @@ import './App.css';
 import { PriceTicker } from './components/PriceTicker';
 import { usePrices } from './hooks/usePrices';
 import { LangContext, useLang, useT, type Lang, type LangContextType } from './i18n';
-import { ThemeProvider, useTheme } from './contexts/ThemeContext';
+import { ThemeProvider } from './contexts/ThemeContext';
+import { useTheme } from './contexts/useTheme';
 import { radialViewTransition } from './utils/viewTransition';
 
 function Dashboard() {

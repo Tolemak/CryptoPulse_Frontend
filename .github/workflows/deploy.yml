@@ -25,7 +25,11 @@ jobs:
           cache: 'npm'
       - run: npm ci
       - run: npm run lint
+      - name: Test with coverage
+        run: npm run test:coverage
       - run: npm run build
+        env:
+          VITE_API_BASE_URL: https://crypto-pulse-api.tolemak.pl
       - run: cp .htaccess dist/
       - name: Push dist to gh-pages branch
         run: |
