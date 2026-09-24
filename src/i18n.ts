@@ -7,7 +7,10 @@ export const translations = {
     app: {
       title: 'CryptoPulse',
       subtitle: 'Ceny na żywo z kilku giełd, z alertami webhookowymi.',
-      sourceLink: 'Kod backendu na GitHubie',
+    },
+    footer: {
+      portfolio: 'Kamil Gałkowski · portfolio',
+      source: 'Kod na GitHubie:',
     },
     prices: {
       title: 'Ceny',
@@ -30,7 +33,10 @@ export const translations = {
     app: {
       title: 'CryptoPulse',
       subtitle: 'Live multi-exchange price aggregation, with webhook alerts.',
-      sourceLink: 'Backend source on GitHub',
+    },
+    footer: {
+      portfolio: 'Kamil Gałkowski · portfolio',
+      source: 'Source on GitHub:',
     },
     prices: {
       title: 'Prices',

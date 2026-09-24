@@ -35,6 +35,17 @@ describe('App', () => {
     expect(screen.getByText('BTC / USD')).toBeDefined();
   });
 
+  it('links back to the portfolio and both repositories', () => {
+    render(<App />);
+
+    const hrefs = Array.from(document.querySelectorAll('.app-footer a')).map((a) => a.getAttribute('href'));
+    expect(hrefs).toEqual([
+      'https://kamil-galkowski.pl',
+      'https://github.com/Tolemak/CryptoPulse_Frontend',
+      'https://github.com/Tolemak/CryptoPulse_BackendDemo',
+    ]);
+  });
+
   it('switches language and remembers the choice', async () => {
     render(<App />);
     await waitFor(() => expect(document.querySelectorAll('.price-card')).toHaveLength(1));

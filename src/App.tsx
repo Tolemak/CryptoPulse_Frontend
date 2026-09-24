@@ -64,9 +64,19 @@ function Dashboard() {
       </section>
 
       <footer className="app-footer">
-        <a href="https://github.com/Tolemak/CryptoPulse_BackendDemo" target="_blank" rel="noopener noreferrer">
-          {t.app.sourceLink}
+        <a href="https://kamil-galkowski.pl" target="_blank" rel="noopener noreferrer">
+          {t.footer.portfolio}
         </a>
+        <span>
+          {t.footer.source}{' '}
+          <a href="https://github.com/Tolemak/CryptoPulse_Frontend" target="_blank" rel="noopener noreferrer">
+            frontend
+          </a>
+          {' · '}
+          <a href="https://github.com/Tolemak/CryptoPulse_BackendDemo" target="_blank" rel="noopener noreferrer">
+            backend
+          </a>
+        </span>
       </footer>
     </div>
   );
