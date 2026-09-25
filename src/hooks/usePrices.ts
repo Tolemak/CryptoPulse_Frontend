@@ -7,8 +7,15 @@ const MANUAL_REFRESH_COOLDOWN_MS = 60_000;
 
 export function usePrices() {
   const [prices, setPrices] = useState<AggregatedPrice[]>([]);
+  const [loadedAt, setLoadedAt] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+
+  const accept = useCallback((data: AggregatedPrice[]) => {
+    setPrices(data);
+    setLoadedAt(new Date().toISOString());
+    setError(null);
+  }, []);
   const [refreshing, setRefreshing] = useState(false);
   const [refreshBlocked, setRefreshBlocked] = useState(false);
   const [nextManualRefreshAt, setNextManualRefreshAt] = useState(0);
@@ -16,15 +23,13 @@ export function usePrices() {
 
   const load = useCallback(async () => {
     try {
-      const data = await getPrices();
-      setPrices(data);
-      setError(null);
+      accept(await getPrices());
     } catch (e) {
       setError(e instanceof Error ? e.message : 'Failed to load prices.');
     } finally {
       setLoading(false);
     }
-  }, []);
+  }, [accept]);
 
   useEffect(() => {
     // load() is async, so nothing is set before the first await - the lint rule
@@ -49,9 +54,7 @@ export function usePrices() {
     setRefreshing(true);
     setRefreshBlocked(false);
     try {
-      const data = await refreshPrices();
-      setPrices(data);
-      setError(null);
+      accept(await refreshPrices());
       setNextManualRefreshAt(Date.now() + MANUAL_REFRESH_COOLDOWN_MS);
     } catch (e) {
       if (e instanceof ApiError && e.status === 429) {
@@ -64,10 +67,11 @@ export function usePrices() {
     } finally {
       setRefreshing(false);
     }
-  }, [nextManualRefreshAt, refreshing]);
+  }, [accept, nextManualRefreshAt, refreshing]);
 
   return {
     prices,
+    loadedAt,
     loading,
     error,
     refresh,

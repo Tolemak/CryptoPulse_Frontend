@@ -5,18 +5,19 @@ import { formatDate, formatPct, formatPrice, formatTime } from '../utils/format'
 
 const COLLAPSED_COUNT = 10;
 
-
 interface Props {
   prices: AggregatedPrice[];
+  loadedAt: string | null;
   loading: boolean;
   error: string | null;
 }
 
-export function PriceTicker({ prices, loading, error }: Props) {
+export function PriceTicker({ prices, loadedAt, loading, error }: Props) {
   const t = useT();
   const [expanded, setExpanded] = useState(false);
+  const stale = error !== null && prices.length > 0;
 
-  if (error) {
+  if (error && !stale) {
     return <p className="status status-error">{t.prices.error.replace('{error}', error)}</p>;
   }
 
@@ -33,7 +34,12 @@ export function PriceTicker({ prices, loading, error }: Props) {
 
   return (
     <>
-      <div className="price-grid">
+      {stale && (
+        <p className="status status-stale" role="status">
+          {loadedAt ? t.prices.stale.replace('{time}', formatTime(loadedAt)) : t.prices.staleUnknown}
+        </p>
+      )}
+      <div className={stale ? 'price-grid price-grid-stale' : 'price-grid'}>
         {visiblePrices.map((price) => (
           <article key={price.pair} className="price-card">
             <header>

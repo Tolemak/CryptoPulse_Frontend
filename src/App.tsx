@@ -13,6 +13,7 @@ function Dashboard() {
   const { theme, toggleTheme } = useTheme();
   const {
     prices,
+    loadedAt,
     loading,
     error,
     refresh,
@@ -39,8 +40,8 @@ function Dashboard() {
               type="button"
               className="lang-btn"
               onClick={(e) => radialViewTransition(e.clientX, e.clientY, toggleTheme)}
-              aria-label={theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}
-              title={theme === 'dark' ? 'Light mode' : 'Dark mode'}
+              aria-label={theme === 'dark' ? t.theme.switchToLight : t.theme.switchToDark}
+              title={theme === 'dark' ? t.theme.light : t.theme.dark}
             >
               {theme === 'dark' ? '🌙' : '☀️'}
             </button>
@@ -60,7 +61,7 @@ function Dashboard() {
           </button>
         </div>
         {refreshBlocked && <p className="status refresh-notice">{t.prices.refreshNotice}</p>}
-        <PriceTicker prices={prices} loading={loading} error={error} />
+        <PriceTicker prices={prices} loadedAt={loadedAt} loading={loading} error={error} />
       </section>
 
       <footer className="app-footer">

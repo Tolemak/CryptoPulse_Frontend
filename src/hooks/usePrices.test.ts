@@ -47,6 +47,46 @@ describe('usePrices', () => {
     expect(result.current.error).toBe('network down');
   });
 
+  it('remembers when the prices were last loaded', async () => {
+    vi.spyOn(client, 'getPrices').mockResolvedValue(sample);
+
+    const { result } = renderHook(() => usePrices());
+
+    await waitFor(() => expect(result.current.loadedAt).not.toBeNull());
+    expect(Date.now() - Date.parse(result.current.loadedAt as string)).toBeLessThan(5_000);
+  });
+
+  it('keeps the last good prices when a later poll fails', async () => {
+    const getPrices = vi.spyOn(client, 'getPrices').mockResolvedValueOnce(sample).mockRejectedValue(new Error('network down'));
+
+    const { result } = renderHook(() => usePrices());
+    await waitFor(() => expect(result.current.prices).toEqual(sample));
+    const loadedAt = result.current.loadedAt;
+
+    await act(async () => {
+      await vi.advanceTimersByTimeAsync(15_000);
+    });
+
+    expect(getPrices.mock.calls.length).toBeGreaterThan(1);
+    expect(result.current.error).toBe('network down');
+    expect(result.current.prices).toEqual(sample);
+    expect(result.current.loadedAt).toBe(loadedAt);
+  });
+
+  it('clears the error once a poll succeeds again', async () => {
+    vi.spyOn(client, 'getPrices').mockRejectedValueOnce(new Error('network down')).mockResolvedValue(sample);
+
+    const { result } = renderHook(() => usePrices());
+    await waitFor(() => expect(result.current.error).toBe('network down'));
+
+    await act(async () => {
+      await vi.advanceTimersByTimeAsync(15_000);
+    });
+
+    expect(result.current.error).toBeNull();
+    expect(result.current.prices).toEqual(sample);
+  });
+
   it('polls again on the interval', async () => {
     const getPrices = vi.spyOn(client, 'getPrices').mockResolvedValue(sample);
 

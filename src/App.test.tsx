@@ -1,4 +1,4 @@
-import { cleanup, fireEvent, render, screen, waitFor } from '@testing-library/react';
+import { act, cleanup, fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import App from './App';
 import * as client from './api/client';
@@ -24,6 +24,7 @@ beforeEach(() => {
 
 afterEach(() => {
   cleanup();
+  vi.useRealTimers();
   vi.restoreAllMocks();
 });
 
@@ -69,6 +70,28 @@ describe('App', () => {
     fireEvent.click(themeButton);
 
     expect(document.documentElement.getAttribute('data-theme')).not.toBe(before);
+  });
+
+  it('labels the theme toggle in the selected language', async () => {
+    localStorage.setItem('lang', 'pl');
+    render(<App />);
+    await waitFor(() => expect(document.querySelectorAll('.price-card')).toHaveLength(1));
+
+    expect(screen.getByRole('button', { name: /motyw/i })).toBeDefined();
+  });
+
+  it('keeps showing prices when a later poll fails', async () => {
+    vi.useFakeTimers({ shouldAdvanceTime: true });
+    vi.spyOn(client, 'getPrices').mockResolvedValueOnce(sample).mockRejectedValue(new Error('offline'));
+    render(<App />);
+    await waitFor(() => expect(document.querySelectorAll('.price-card')).toHaveLength(1));
+
+    await act(async () => {
+      await vi.advanceTimersByTimeAsync(15_000);
+    });
+
+    expect(document.querySelectorAll('.price-card')).toHaveLength(1);
+    expect(screen.getByRole('status').textContent).toMatch(/Cannot reach the API/);
   });
 
   it('triggers a manual refresh', async () => {
