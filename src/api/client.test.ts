@@ -61,6 +61,14 @@ describe('getPrices', () => {
     expect(init.method).toBe('GET');
   });
 
+  it('sends no Content-Type, so the cross-origin request needs no preflight', async () => {
+    const fetchMock = mockFetch({ json: () => Promise.resolve([]) });
+
+    await getPrices();
+
+    expect(fetchMock.mock.calls[0][1].headers).toBeUndefined();
+  });
+
   it('raises an ApiError carrying the server message', async () => {
     mockFetch({
       ok: false,

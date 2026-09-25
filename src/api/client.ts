@@ -15,10 +15,7 @@ export class ApiError extends Error {
 }
 
 async function request<T>(path: string, method: 'GET' | 'POST' = 'GET'): Promise<T> {
-  const response = await fetch(`${BASE_URL}${path}`, {
-    method,
-    headers: { 'Content-Type': 'application/json' },
-  });
+  const response = await fetch(`${BASE_URL}${path}`, { method });
 
   if (!response.ok) {
     let body: ApiErrorBody | undefined;
