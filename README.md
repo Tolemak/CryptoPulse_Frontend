@@ -8,7 +8,8 @@ manual refresh button. PL/EN.
 
 Vite + React 19 + TypeScript. Polls `GET /api/prices` every 15s;
 `POST /api/prices/refresh` for a manual re-poll (rate-limited server-side to
-once per 60s).
+once per 60s). When a poll fails, the last prices stay on screen, marked with
+the time they were loaded.
 
 ## Running it
 
@@ -31,4 +32,6 @@ npm run build
 ```
 
 `dist/` pushed to a `gh-pages` branch by CI, served statically — see
-`.github/workflows/deploy.yml`.
+`.github/workflows/deploy.yml`. `.htaccess` (copied into `dist/`) sets the
+security headers, CSP included — its `connect-src` must match
+`VITE_API_BASE_URL`.

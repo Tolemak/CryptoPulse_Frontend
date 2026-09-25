@@ -8,7 +8,8 @@ ręcznego odświeżenia. PL/EN.
 
 Vite + React 19 + TypeScript. Odpytuje `GET /api/prices` co 15s;
 `POST /api/prices/refresh` do ręcznego re-pollu (limit po stronie backendu:
-raz na 60s).
+raz na 60s). Gdy poll się nie uda, ostatnie ceny zostają na ekranie z
+oznaczeniem, z której są godziny.
 
 ## Uruchomienie
 
@@ -32,4 +33,6 @@ npm run build
 ```
 
 `dist/` wypychany na branch `gh-pages` przez CI, serwowany statycznie —
-patrz `.github/workflows/deploy.yml`.
+patrz `.github/workflows/deploy.yml`. `.htaccess` (kopiowany do `dist/`)
+ustawia nagłówki bezpieczeństwa, w tym CSP — `connect-src` musi zgadzać się
+z `VITE_API_BASE_URL`.
