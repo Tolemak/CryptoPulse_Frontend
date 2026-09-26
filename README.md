@@ -1,37 +1,17 @@
-# CryptoPulse — Frontend
+# CryptoPulse Frontend
 
-[Wersja polska](README.pl.md)
+Price ticker for [CryptoPulse_BackendDemo](https://github.com/Tolemak/CryptoPulse_BackendDemo): aggregated prices refreshed every 15 s plus a manual refresh button. React + TypeScript + Vite, PL/EN. [crypto-pulse.tolemak.pl](https://crypto-pulse.tolemak.pl/)
 
-A ticker UI for [`CryptoPulse_BackendDemo`](https://github.com/Tolemak/CryptoPulse_BackendDemo):
-live aggregated crypto prices across Binance, Kraken, and Coinbase, with a
-manual refresh button. PL/EN.
-
-Vite + React 19 + TypeScript. Polls `GET /api/prices` every 15s;
-`POST /api/prices/refresh` for a manual re-poll (rate-limited server-side to
-once per 60s). When a poll fails, the last prices stay on screen, marked with
-the time they were loaded.
-
-## Running it
-
-Requires the backend running locally, with CORS allowing this app's origin.
+[Polska wersja](README.pl.md)
 
 ```bash
 npm install
 npm run dev
-```
-
-`VITE_API_BASE_URL` (in `.env`) points at the backend — defaults to
-`http://localhost:8000`. `.env.production` holds a placeholder for the
-deployed API origin.
-
-## Build & deploy
-
-```bash
+npm test
 npm run lint
 npm run build
 ```
 
-`dist/` pushed to a `gh-pages` branch by CI, served statically — see
-`.github/workflows/deploy.yml`. `.htaccess` (copied into `dist/`) sets the
-security headers, CSP included — its `connect-src` must match
-`VITE_API_BASE_URL`.
+Needs the backend running; its address goes in `VITE_API_BASE_URL` (`.env`, default `http://localhost:8000`). If the production API origin changes, update `connect-src` in `.htaccess` too.
+
+CI pushes the built `dist/` to the `build` branch, the server deploys from there.
