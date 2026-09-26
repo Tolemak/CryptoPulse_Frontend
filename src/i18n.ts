@@ -36,6 +36,21 @@ export const translations = {
       showMore: 'Pokaż pozostałe ({count})',
       showLess: 'Pokaż mniej',
     },
+    board: {
+      coin: 'Krypto',
+      median: 'Mediana',
+      spread: 'Rozrzut',
+      fromAth: 'Od szczytu',
+      legend: 'Ceny w USD. Najtańsza giełda w wierszu świeci na zielono.',
+      cheapest: 'najtaniej',
+    },
+    bar: {
+      exchanges: 'giełdy',
+      refreshed: 'odświeżono',
+      pairs: 'pary',
+      api: 'API',
+      offline: 'brak połączenia',
+    },
   },
   en: {
     app: {
@@ -69,6 +84,21 @@ export const translations = {
       refreshNotice: 'A refresh was already requested recently — try again shortly.',
       showMore: 'Show the rest ({count})',
       showLess: 'Show less',
+    },
+    board: {
+      coin: 'Coin',
+      median: 'Median',
+      spread: 'Spread',
+      fromAth: 'From ATH',
+      legend: 'Prices in USD. The cheapest exchange in each row lights up green.',
+      cheapest: 'cheapest',
+    },
+    bar: {
+      exchanges: 'exchanges',
+      refreshed: 'refreshed',
+      pairs: 'pairs',
+      api: 'API',
+      offline: 'offline',
     },
   },
 };

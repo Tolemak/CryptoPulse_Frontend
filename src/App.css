@@ -1,215 +1,230 @@
 .app {
+  max-width: 1120px;
+  margin: 0 auto;
+  padding: 36px 20px 76px;
+}
+
+.app-header h1 {
   display: flex;
-  flex-direction: column;
-  gap: 40px;
-  padding: 40px 0 60px;
-  flex: 1;
+  align-items: center;
+  gap: 14px;
+  margin: 0;
+  font: 600 40px/1.1 var(--label-font);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--text);
 }
 
 .app-header p {
-  color: var(--text);
-  margin-top: 8px;
+  margin: 6px 0 0;
+  max-width: 60ch;
+  color: var(--text-muted);
 }
 
-.app-header-top {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
+/* Flashes once each time new prices arrive: the only thing on the page that moves on its own. */
+.pulse {
+  width: 12px;
+  height: 12px;
+  flex: none;
+  border-radius: 50%;
+  background: var(--best);
+  box-shadow: 0 0 8px var(--best);
+  animation: pulse 900ms ease-out;
 }
 
-.app-header-top h1 {
-  margin: 0;
-  line-height: 1.1;
+@keyframes pulse {
+  from {
+    opacity: 0.2;
+    transform: scale(0.6);
+  }
 }
 
-.app-header-actions {
-  display: flex;
-  gap: 8px;
-}
-
-.lang-btn {
-  font: inherit;
-  font-size: 13px;
-  font-weight: 600;
-  padding: 6px 12px;
+.board-panel {
+  margin-top: 28px;
+  padding: 12px;
   border-radius: 6px;
-  border: 1px solid var(--border);
-  background: transparent;
-  color: var(--text-h);
-  cursor: pointer;
-}
-
-.lang-btn:hover {
-  border-color: var(--accent-border);
-  color: var(--accent);
-}
-
-section h2 {
-  text-align: left;
+  background: var(--frame);
+  color: var(--frame-text);
 }
 
 .section-header {
   display: flex;
-  align-items: center;
+  flex-wrap: wrap;
+  align-items: flex-end;
   justify-content: space-between;
-  margin-bottom: 8px;
+  gap: 10px 20px;
+  padding: 4px 6px 12px;
 }
 
 .section-header h2 {
   margin: 0;
+  font: 600 15px var(--label-font);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
 }
 
-.refresh-btn {
-  font: inherit;
-  font-size: 13px;
-  padding: 6px 14px;
-  border-radius: 6px;
-  border: 1px solid var(--border);
-  background: transparent;
-  color: var(--text-h);
+.legend {
+  margin: 2px 0 0;
+  font-size: 14px;
+  opacity: 0.85;
+}
+
+.refresh-btn,
+.show-more-btn {
+  padding: 9px 16px;
+  border: 0;
+  border-radius: 3px;
+  background: var(--button-bg);
+  color: var(--button-fg);
+  font: 600 13px var(--label-font);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
   cursor: pointer;
-}
-
-.refresh-btn:hover:not(:disabled) {
-  border-color: var(--accent-border);
-  color: var(--accent);
 }
 
 .refresh-btn:disabled {
-  opacity: 0.6;
-  cursor: default;
-}
-
-.status {
-  color: var(--text);
-  padding: 16px;
-  border: 1px dashed var(--border);
-  border-radius: 8px;
-}
-
-.status-error {
-  color: #dc2626;
-  border-color: #dc2626;
-}
-
-.status-stale {
-  margin-bottom: 12px;
-  padding: 10px 16px;
-  font-size: 13px;
-}
-
-.price-grid-stale {
-  opacity: 0.6;
-}
-
-.refresh-notice {
-  margin-bottom: 12px;
-  padding: 10px 16px;
-  font-size: 13px;
-  color: var(--accent);
-  border-color: var(--accent-border);
-}
-
-.price-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-  gap: 16px;
-}
-
-.price-card {
-  text-align: left;
-  border: 1px solid var(--border);
-  border-radius: 12px;
-  padding: 18px 20px;
-  background: var(--code-bg);
-}
-
-.price-card header {
-  display: flex;
-  justify-content: space-between;
-  align-items: baseline;
-  margin-bottom: 10px;
-}
-
-.price-card h3 {
-  margin: 0;
-  font-size: 18px;
-  color: var(--text-h);
-}
-
-.price-median {
-  font-size: 20px;
-  font-weight: 600;
-  color: var(--accent);
-}
-
-.price-breakdown {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-  font-size: 14px;
-}
-
-.price-breakdown li {
-  display: flex;
-  justify-content: space-between;
-}
-
-.exchange-name {
-  text-transform: capitalize;
-  color: var(--text);
-}
-
-.price-ath {
-  margin: 10px 0 0;
-  font-size: 13px;
-  color: var(--text);
-}
-
-.pct-up {
-  color: #2fb170;
-}
-
-.pct-down {
-  color: #e35d5d;
-}
-
-.price-card footer {
-  margin-top: 10px;
-  font-size: 12px;
-  color: var(--text);
-  opacity: 0.7;
+  opacity: 0.55;
+  cursor: not-allowed;
 }
 
 .show-more-btn {
-  display: block;
-  margin: 20px auto 0;
-  font: inherit;
-  font-size: 13px;
-  font-weight: 600;
-  padding: 8px 18px;
-  border-radius: 6px;
-  border: 1px solid var(--border);
-  background: transparent;
-  color: var(--text-h);
-  cursor: pointer;
+  margin: 12px 6px 2px;
 }
 
-.show-more-btn:hover {
-  border-color: var(--accent-border);
-  color: var(--accent);
+.price-grid {
+  position: relative;
+  overflow-x: auto;
+  padding: 4px 14px 10px;
+  border-radius: 4px;
+  background: var(--board);
+}
+
+.board {
+  width: 100%;
+  min-width: 720px;
+  border-collapse: collapse;
+  font-variant-numeric: tabular-nums;
+}
+
+.board thead th {
+  padding: 12px 10px 8px;
+  border-bottom: 1px solid var(--rule);
+  color: var(--muted);
+  font: 600 13px var(--label-font);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  text-align: right;
+}
+
+.board thead th:first-child {
+  text-align: left;
+}
+
+.board tbody tr {
+  border-bottom: 1px solid var(--rule);
+}
+
+.board tbody tr:last-child {
+  border-bottom: 0;
+}
+
+.coin {
+  position: sticky;
+  left: 0;
+  padding: 10px 10px 10px 0;
+  background: var(--board);
+  color: var(--label);
+  font: 600 20px var(--label-font);
+  letter-spacing: 0.08em;
+  text-align: left;
+}
+
+.led {
+  padding: 10px;
+  color: var(--digit);
+  font: 900 22px/1 var(--digit-font);
+  text-align: right;
+  text-shadow: 0 0 6px var(--glow);
+  white-space: nowrap;
+}
+
+.led.median {
+  font-size: 25px;
+}
+
+.led.best {
+  background: var(--best-bg);
+  color: var(--best);
+  text-shadow: 0 0 6px var(--best-glow);
+}
+
+.led.missing {
+  color: var(--muted);
+  text-shadow: none;
+}
+
+.spread,
+.price-ath {
+  padding: 10px;
+  color: var(--muted);
+  font: 500 15px var(--label-font);
+  text-align: right;
+  white-space: nowrap;
+}
+
+.pct-down {
+  color: var(--down);
+}
+
+.pct-up {
+  color: var(--up);
+}
+
+/* When the API is unreachable the last prices stay up, but the board dims like a panel that lost power. */
+.price-grid-stale .led {
+  opacity: 0.45;
+  text-shadow: none;
+}
+
+.status {
+  margin: 8px 6px;
+  font-size: 15px;
+}
+
+.status-error {
+  color: var(--down);
+}
+
+.status-stale,
+.refresh-notice {
+  color: var(--warn);
 }
 
 .app-footer {
-  margin-top: auto;
-  padding-top: 20px;
-  border-top: 1px solid var(--border);
-  font-size: 13px;
   display: flex;
   flex-wrap: wrap;
-  justify-content: space-between;
-  gap: 8px 16px;
+  gap: 8px 20px;
+  margin-top: 28px;
+  color: var(--text-muted);
+  font-size: 14px;
+}
+
+@media (max-width: 640px) {
+  .app {
+    padding-top: 24px;
+  }
+
+  .app-header h1 {
+    font-size: 30px;
+  }
+
+  .board-panel {
+    padding: 8px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pulse {
+    animation: none;
+  }
 }

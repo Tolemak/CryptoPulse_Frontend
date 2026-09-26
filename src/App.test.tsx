@@ -33,7 +33,7 @@ describe('App', () => {
     render(<App />);
 
     await waitFor(() => expect(document.querySelectorAll('.price-card')).toHaveLength(1));
-    expect(screen.getByText('BTC / USD')).toBeDefined();
+    expect(screen.getByRole('rowheader', { name: 'BTC' })).toBeDefined();
   });
 
   it('links back to the portfolio and both repositories', () => {
@@ -47,37 +47,47 @@ describe('App', () => {
     ]);
   });
 
-  it('switches language and remembers the choice', async () => {
+  it('switches language from the status bar and remembers the choice', async () => {
     render(<App />);
     await waitFor(() => expect(document.querySelectorAll('.price-card')).toHaveLength(1));
+    expect(screen.getByRole('heading', { name: 'Prices' })).toBeDefined();
 
-    const langButton = screen.getByRole('button', { name: /^(PL|EN)$/ });
-    const before = langButton.textContent;
+    act(() => {
+      document.querySelector('tolemak-bar')?.dispatchEvent(
+        new CustomEvent('tolemak-lang', { detail: { lang: 'pl' }, bubbles: true }),
+      );
+    });
 
-    fireEvent.click(langButton);
-
-    expect(screen.getByRole('button', { name: /^(PL|EN)$/ }).textContent).not.toBe(before);
-    expect(localStorage.getItem('lang')).toBeTruthy();
+    expect(screen.getByRole('heading', { name: 'Ceny' })).toBeDefined();
+    expect(localStorage.getItem('lang')).toBe('pl');
+    expect(document.documentElement.lang).toBe('pl');
   });
 
-  it('toggles the theme from the header', async () => {
+  it('takes over the theme toggle from the status bar', async () => {
     render(<App />);
     await waitFor(() => expect(document.querySelectorAll('.price-card')).toHaveLength(1));
-
-    const themeButton = screen.getByRole('button', { name: /mode/i });
     const before = document.documentElement.getAttribute('data-theme');
+    const event = new CustomEvent('tolemak-theme', {
+      detail: { theme: before === 'dark' ? 'light' : 'dark' },
+      bubbles: true,
+      cancelable: true,
+    });
 
-    fireEvent.click(themeButton);
+    act(() => {
+      document.querySelector('tolemak-bar')?.dispatchEvent(event);
+    });
 
+    expect(event.defaultPrevented).toBe(true);
     expect(document.documentElement.getAttribute('data-theme')).not.toBe(before);
   });
 
-  it('labels the theme toggle in the selected language', async () => {
-    localStorage.setItem('lang', 'pl');
+  it('shows the live state in the status bar', async () => {
     render(<App />);
     await waitFor(() => expect(document.querySelectorAll('.price-card')).toHaveLength(1));
 
-    expect(screen.getByRole('button', { name: /motyw/i })).toBeDefined();
+    const fields = Array.from(document.querySelectorAll('tolemak-field')).map((f) => `${f.getAttribute('label')} ${f.textContent}`);
+    expect(fields).toContain('exchanges 1/3');
+    expect(fields).toContain('pairs 1');
   });
 
   it('keeps showing prices when a later poll fails', async () => {

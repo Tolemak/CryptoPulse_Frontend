@@ -1,16 +1,13 @@
-import { useCallback, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import './App.css';
 import { PriceTicker } from './components/PriceTicker';
+import { StatusBar } from './components/StatusBar';
 import { usePrices } from './hooks/usePrices';
-import { LangContext, useLang, useT, type Lang, type LangContextType } from './i18n';
+import { LangContext, useT, type Lang, type LangContextType } from './i18n';
 import { ThemeProvider } from './contexts/ThemeContext';
-import { useTheme } from './contexts/useTheme';
-import { radialViewTransition } from './utils/viewTransition';
 
 function Dashboard() {
   const t = useT();
-  const { lang, setLang } = useLang();
-  const { theme, toggleTheme } = useTheme();
   const {
     prices,
     loadedAt,
@@ -33,29 +30,19 @@ function Dashboard() {
   return (
     <div className="app">
       <header className="app-header">
-        <div className="app-header-top">
-          <h1>{t.app.title}</h1>
-          <div className="app-header-actions">
-            <button
-              type="button"
-              className="lang-btn"
-              onClick={(e) => radialViewTransition(e.clientX, e.clientY, toggleTheme)}
-              aria-label={theme === 'dark' ? t.theme.switchToLight : t.theme.switchToDark}
-              title={theme === 'dark' ? t.theme.light : t.theme.dark}
-            >
-              {theme === 'dark' ? '🌙' : '☀️'}
-            </button>
-            <button type="button" className="lang-btn" onClick={() => setLang(lang === 'pl' ? 'en' : 'pl')}>
-              {lang === 'pl' ? 'EN' : 'PL'}
-            </button>
-          </div>
-        </div>
+        <h1>
+          <span className="pulse" key={loadedAt ?? 'waiting'} aria-hidden="true" />
+          {t.app.title}
+        </h1>
         <p>{t.app.subtitle}</p>
       </header>
 
-      <section>
+      <section className="board-panel" aria-labelledby="prices-title">
         <div className="section-header">
-          <h2>{t.prices.title}</h2>
+          <div>
+            <h2 id="prices-title">{t.prices.title}</h2>
+            <p className="legend">{t.board.legend}</p>
+          </div>
           <button type="button" onClick={refresh} disabled={!canManuallyRefresh} className="refresh-btn">
             {refreshLabel}
           </button>
@@ -79,6 +66,8 @@ function Dashboard() {
           </a>
         </span>
       </footer>
+
+      <StatusBar prices={prices} loadedAt={loadedAt} offline={error !== null} />
     </div>
   );
 }
@@ -93,6 +82,20 @@ function App() {
     localStorage.setItem('lang', next);
     setLangState(next);
   }, []);
+
+  useEffect(() => {
+    document.documentElement.lang = lang;
+  }, [lang]);
+
+  // The language button lives in the shared status bar, which only announces the choice.
+  useEffect(() => {
+    const onLang = (event: Event) => {
+      const next = (event as CustomEvent<{ lang: string }>).detail.lang;
+      if (next === 'pl' || next === 'en') setLang(next);
+    };
+    document.addEventListener('tolemak-lang', onLang);
+    return () => document.removeEventListener('tolemak-lang', onLang);
+  }, [setLang]);
 
   const contextValue = useMemo(() => ({ lang, setLang }), [lang, setLang]);
 

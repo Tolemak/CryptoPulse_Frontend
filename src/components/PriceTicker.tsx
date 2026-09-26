@@ -1,15 +1,62 @@
 import { useState } from 'react';
 import { useT } from '../i18n';
-import type { AggregatedPrice } from '../types';
-import { formatDate, formatPct, formatPrice, formatTime } from '../utils/format';
+import type { AggregatedPrice, Exchange } from '../types';
+import { formatAmount, formatDate, formatPct, formatPrice, formatTime } from '../utils/format';
 
 const COLLAPSED_COUNT = 10;
+
+const EXCHANGES: { id: Exchange; name: string }[] = [
+  { id: 'binance', name: 'Binance' },
+  { id: 'coinbase', name: 'Coinbase' },
+  { id: 'kraken', name: 'Kraken' },
+];
 
 interface Props {
   prices: AggregatedPrice[];
   loadedAt: string | null;
   loading: boolean;
   error: string | null;
+}
+
+function PriceRow({ price }: { price: AggregatedPrice }) {
+  const t = useT();
+  const quotes = new Map(price.breakdown.map((quote) => [quote.exchange, quote.price]));
+  const values = [...quotes.values()];
+  const compared = values.length > 1;
+  const cheapest = compared ? Math.min(...values) : null;
+  const spread = compared && price.median > 0 ? ((Math.max(...values) - Math.min(...values)) / price.median) * 100 : null;
+  const athTitle =
+    price.athPrice !== null
+      ? t.prices.ath
+          .replace('{price}', formatPrice(price.athPrice))
+          .replace('{date}', price.athDate ? formatDate(price.athDate) : '?')
+      : t.prices.athUnavailable;
+
+  return (
+    <tr className="price-card" title={t.prices.updated.replace('{time}', formatTime(price.updatedAt))}>
+      <th scope="row" className="coin">{price.pair.split('_')[0]}</th>
+      <td className="led median">{formatAmount(price.median)}</td>
+      {EXCHANGES.map(({ id }) => {
+        const quote = quotes.get(id);
+        if (quote === undefined) return <td key={id} className="led missing">—</td>;
+        const best = quote === cheapest;
+        return (
+          <td key={id} className={best ? 'led best' : 'led'}>
+            {formatAmount(quote)}
+            {best && <span className="visually-hidden"> ({t.board.cheapest})</span>}
+          </td>
+        );
+      })}
+      <td className="spread">{spread === null ? '—' : `${spread.toFixed(2)}%`}</td>
+      <td className="price-ath" title={athTitle}>
+        {price.pctFromAth !== null ? (
+          <span className={price.pctFromAth < 0 ? 'pct-down' : 'pct-up'}>{formatPct(price.pctFromAth)}</span>
+        ) : (
+          <span aria-label={t.prices.athUnavailable}>—</span>
+        )}
+      </td>
+    </tr>
+  );
 }
 
 export function PriceTicker({ prices, loadedAt, loading, error }: Props) {
@@ -40,40 +87,24 @@ export function PriceTicker({ prices, loadedAt, loading, error }: Props) {
         </p>
       )}
       <div className={stale ? 'price-grid price-grid-stale' : 'price-grid'}>
-        {visiblePrices.map((price) => (
-          <article key={price.pair} className="price-card">
-            <header>
-              <h3>{price.pair.replace('_', ' / ')}</h3>
-              <span className="price-median">{formatPrice(price.median)}</span>
-            </header>
-            <ul className="price-breakdown">
-              {price.breakdown.map((quote) => (
-                <li key={quote.exchange}>
-                  <span className="exchange-name">{quote.exchange}</span>
-                  <span>{formatPrice(quote.price)}</span>
-                </li>
+        <table className="board">
+          <thead>
+            <tr>
+              <th scope="col">{t.board.coin}</th>
+              <th scope="col">{t.board.median}</th>
+              {EXCHANGES.map(({ id, name }) => (
+                <th key={id} scope="col">{name}</th>
               ))}
-            </ul>
-            <p className="price-ath">
-              {price.athPrice !== null ? (
-                <>
-                  {t.prices.ath
-                    .replace('{price}', formatPrice(price.athPrice))
-                    .replace('{date}', price.athDate ? formatDate(price.athDate) : '?')}
-                  {price.pctFromAth !== null && (
-                    <span className={price.pctFromAth < 0 ? 'pct-down' : 'pct-up'}>
-                      {' '}
-                      ({t.prices.pctFromAth.replace('{pct}', formatPct(price.pctFromAth))})
-                    </span>
-                  )}
-                </>
-              ) : (
-                t.prices.athUnavailable
-              )}
-            </p>
-            <footer>{t.prices.updated.replace('{time}', formatTime(price.updatedAt))}</footer>
-          </article>
-        ))}
+              <th scope="col">{t.board.spread}</th>
+              <th scope="col">{t.board.fromAth}</th>
+            </tr>
+          </thead>
+          <tbody>
+            {visiblePrices.map((price) => (
+              <PriceRow key={price.pair} price={price} />
+            ))}
+          </tbody>
+        </table>
       </div>
       {hiddenCount > 0 && (
         <button type="button" className="show-more-btn" onClick={() => setExpanded((prev) => !prev)}>

@@ -1,5 +1,6 @@
 import { useEffect, useState, type ReactNode } from 'react';
 import { ThemeContext, type Theme } from './themeContextValue';
+import { radialViewTransition } from '../utils/viewTransition';
 
 const THEME_KEY = 'theme';
 
@@ -17,6 +18,18 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
     document.documentElement.setAttribute('data-theme', theme);
     localStorage.setItem(THEME_KEY, theme);
   }, [theme]);
+
+  // The toggle button sits in the shared status bar; its event is handled here so the switch keeps the radial animation.
+  useEffect(() => {
+    const onTheme = (event: Event) => {
+      event.preventDefault();
+      const next = (event as CustomEvent<{ theme: Theme }>).detail.theme;
+      const bar = (event.target as HTMLElement).getBoundingClientRect();
+      radialViewTransition(bar.right - 30, bar.top + bar.height / 2, () => setTheme(next));
+    };
+    document.addEventListener('tolemak-theme', onTheme);
+    return () => document.removeEventListener('tolemak-theme', onTheme);
+  }, []);
 
   const toggleTheme = () => setTheme((prev) => (prev === 'dark' ? 'light' : 'dark'));
 
