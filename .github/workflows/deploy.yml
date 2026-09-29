@@ -9,44 +9,40 @@ on:
       - main
 
 permissions:
-  contents: write
+  contents: read
 
 concurrency:
   group: deploy-${{ github.ref }}
-  cancel-in-progress: true
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
 jobs:
-  build:
+  ci:
+    uses: Tolemak/.github/.github/workflows/node-ci.yml@v1
+    with:
+      node-version: "22"
+      test-command: npm run test:coverage
+      build-command: VITE_API_BASE_URL=https://crypto-pulse-api.tolemak.pl npm run build && cp .htaccess dist/
+      artifact-name: dist
+      artifact-include-hidden-files: true
+
+  deploy:
+    needs: ci
+    if: github.event_name == 'push'
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     steps:
-      - uses: actions/checkout@v7
+      - uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
         with:
-          fetch-depth: 0
-      - uses: actions/setup-node@v7
-        with:
-          node-version: 22
-          cache: 'npm'
-      - run: npm ci
-      - run: npm run lint
-      - name: Test with coverage
-        run: npm run test:coverage
-      - run: npm run build
-        env:
-          VITE_API_BASE_URL: https://crypto-pulse-api.tolemak.pl
-      - run: cp .htaccess dist/
+          name: dist
+          path: dist
+
       - name: Push dist to build branch
-        if: github.event_name == 'push'
-        run: |
-          git config --global user.name 'github-actions[bot]'
-          git config --global user.email 'github-actions[bot]@users.noreply.github.com'
-          git checkout --orphan build
-          git --work-tree dist add --all
-          git --work-tree dist commit -m 'Build: ${{ github.sha }}'
-          git push origin HEAD:build --force
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        uses: Tolemak/.github/actions/push-build-branch@v1
+        with:
+          directory: dist
+
       - name: Deploy to Mikrus
-        if: github.event_name == 'push'
         env:
           DEPLOY_SSH_KEY: ${{ secrets.DEPLOY_SSH_KEY }}
           DEPLOY_TARGET: ${{ secrets.DEPLOY_TARGET }}
