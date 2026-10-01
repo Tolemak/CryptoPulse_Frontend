@@ -12,6 +12,6 @@ npm run lint
 npm run build
 ```
 
-Potrzebuje działającego backendu, jego adres idzie do `VITE_API_BASE_URL` (`.env`, domyślnie `http://localhost:8000`). Jeśli zmieni się adres API na produkcji, trzeba też poprawić `connect-src` w `.htaccess`.
+Potrzebuje działającego backendu, jego adres idzie do `VITE_API_BASE_URL` (`.env`, domyślnie `http://localhost:8000`). Build automatycznie wyprowadza `connect-src` w `dist/.htaccess` z tej wartości.
 
 CI wrzuca zbudowany `dist/` na gałąź `build`, z której deployuje serwer.

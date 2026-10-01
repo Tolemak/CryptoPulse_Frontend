@@ -21,7 +21,7 @@ jobs:
     with:
       node-version: "22"
       test-command: npm run test:coverage
-      build-command: VITE_API_BASE_URL=https://crypto-pulse-api.tolemak.pl npm run build && cp .htaccess dist/
+      build-command: VITE_API_BASE_URL=https://crypto-pulse-api.tolemak.pl npm run build
       artifact-name: dist
       artifact-include-hidden-files: true
 
