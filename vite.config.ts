@@ -33,5 +33,8 @@ export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, __dirname, '')
   return {
     plugins: [react(), htaccessCsp(env.VITE_API_BASE_URL)],
+    build: {
+      assetsInlineLimit: (file: string) => (/\.(woff2?|ttf|otf|eot)$/i.test(file) ? false : undefined),
+    },
   }
 })
