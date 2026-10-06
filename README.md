@@ -16,4 +16,11 @@ Needs the backend running; its address goes in `VITE_API_BASE_URL` (copy `.env.e
 
 Prices below $1 are shown with enough decimals for 2 significant digits (so sub-cent coins such as SHIB do not collapse to $0.00); the board cells carry bare numbers because the currency is stated once in its legend.
 
+Notes:
+
+- The language and theme buttons live in the shared `<tolemak-bar>` status bar (`src/tolemak-bar`): plain custom elements with no dependencies, so the same file works in React, Twig and static pages; colors come from the host page through `--tb-*` custom properties. Its stylesheets are constructed (`CSSStyleSheet`) instead of `<style>` tags so it also works under a strict `style-src` CSP. `langList()` is a method, not a getter, because React 19 assigns attributes as properties when the element has one of that name.
+- The bar only announces the language choice (`tolemak-lang` event), since the translations belong to the app. The theme event (`tolemak-theme`) is cancelable: apps with their own theme state (this one, `ThemeContext`) cancel it and apply the theme themselves, which keeps the radial animation. If storage is disabled the choice lasts until reload.
+- `usePrices` polls every 15 s with a 60 s manual refresh cooldown (the countdown is rounded up, so a started second still shows as a full one). Its effect calls the async `load()` directly; nothing is set before the first `await`, which the `react/set-state-in-effect` lint rule cannot see across the call, hence the `oxlint-disable-next-line` there.
+- The pulse dot flashes once each time new prices arrive; when the API is unreachable the last prices stay up and the board dims like a panel that lost power. The look is a currency-exchange rate board: an LCD panel in the light theme, a red LED board in the dark one.
+
 CI pushes the built `dist/` to the `build` branch, the server deploys from there.

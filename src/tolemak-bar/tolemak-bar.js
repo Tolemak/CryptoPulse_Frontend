@@ -1,4 +1,3 @@
-
 const MARK =
   '<svg viewBox="0 0 16 16" aria-hidden="true"><rect x="1" y="1" width="14" height="14" rx="3.5" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M4.6 5h6.8M8 5v6.4" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>';
 

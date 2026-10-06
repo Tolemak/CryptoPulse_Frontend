@@ -16,4 +16,11 @@ Potrzebuje działającego backendu, jego adres idzie do `VITE_API_BASE_URL` (sko
 
 Ceny poniżej 1 USD są pokazywane z liczbą miejsc po przecinku dającą 2 cyfry znaczące (monety poniżej centa, np. SHIB, nie zamieniają się w 0,00 USD); komórki tablicy mają gołe liczby, bo waluta jest podana raz w jej legendzie.
 
+Uwagi:
+
+- Przyciski języka i motywu są we wspólnym pasku statusu `<tolemak-bar>` (`src/tolemak-bar`): zwykłe custom elements bez zależności, więc ten sam plik działa w React, Twig i statycznych stronach; kolory pochodzą ze strony hosta przez właściwości `--tb-*`. Style są konstruowane (`CSSStyleSheet`) zamiast tagów `<style>`, żeby pasek działał też przy ścisłym CSP `style-src`. `langList()` jest metodą, a nie getterem, bo React 19 przypisuje atrybuty jako właściwości, gdy element ma właściwość o tej nazwie.
+- Pasek tylko ogłasza wybór języka (zdarzenie `tolemak-lang`), bo tłumaczenia należą do aplikacji. Zdarzenie motywu (`tolemak-theme`) jest anulowalne: aplikacje z własnym stanem motywu (ta, `ThemeContext`) anulują je i same stosują motyw, co zachowuje animację radialną. Gdy storage jest wyłączony, wybór trwa do przeładowania.
+- `usePrices` odpytuje co 15 s i ma 60 s cooldown ręcznego odświeżenia (odliczanie jest zaokrąglane w górę, więc rozpoczęta sekunda pokazuje się jako pełna). Efekt wywołuje asynchroniczne `load()` bezpośrednio; nic nie jest ustawiane przed pierwszym `await`, czego reguła lint `react/set-state-in-effect` nie widzi przez wywołanie, stąd `oxlint-disable-next-line`.
+- Kropka pulsu miga raz przy każdym nowym komplecie cen; gdy API jest niedostępne, ostatnie ceny zostają, a tablica przygasa jak panel bez zasilania. Wygląd to tablica kursów walut: panel LCD w jasnym motywie, czerwona tablica LED w ciemnym.
+
 CI wrzuca zbudowany `dist/` na gałąź `build`, z której deployuje serwer.
