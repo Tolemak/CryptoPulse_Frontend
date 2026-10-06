@@ -21,7 +21,6 @@
   color: var(--text-muted);
 }
 
-/* Flashes once each time new prices arrive: the only thing on the page that moves on its own. */
 .pulse {
   width: 12px;
   height: 12px;
@@ -180,7 +179,6 @@
   color: var(--up);
 }
 
-/* When the API is unreachable the last prices stay up, but the board dims like a panel that lost power. */
 .price-grid-stale .led {
   opacity: 0.45;
   text-shadow: none;

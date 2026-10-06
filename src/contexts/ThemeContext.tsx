@@ -19,7 +19,6 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
     localStorage.setItem(THEME_KEY, theme);
   }, [theme]);
 
-  // The toggle button sits in the shared status bar; its event is handled here so the switch keeps the radial animation.
   useEffect(() => {
     const onTheme = (event: Event) => {
       event.preventDefault();

@@ -144,7 +144,6 @@ describe('usePrices', () => {
       await result.current.refresh();
     });
 
-    // The countdown is rounded up, so a started second still shows as a full one.
     expect(result.current.refreshBlocked).toBe(true);
     expect(result.current.manualRefreshCooldownSeconds).toBeGreaterThanOrEqual(29);
     expect(result.current.manualRefreshCooldownSeconds).toBeLessThanOrEqual(31);
