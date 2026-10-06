@@ -87,7 +87,6 @@ function App() {
     document.documentElement.lang = lang;
   }, [lang]);
 
-  // The language button lives in the shared status bar, which only announces the choice.
   useEffect(() => {
     const onLang = (event: Event) => {
       const next = (event as CustomEvent<{ lang: string }>).detail.lang;

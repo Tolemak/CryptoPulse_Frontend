@@ -22,7 +22,7 @@ async function request<T>(path: string, method: 'GET' | 'POST' = 'GET'): Promise
     try {
       body = await response.json();
     } catch {
-      // ignore
+      body = undefined;
     }
     const retryAfterHeader = response.headers.get('Retry-After');
     const retryAfterSeconds = retryAfterHeader ? Number(retryAfterHeader) : undefined;
