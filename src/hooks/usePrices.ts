@@ -5,11 +5,6 @@ import type { AggregatedPrice } from '../types';
 const POLL_INTERVAL_MS = 15_000;
 const MANUAL_REFRESH_COOLDOWN_MS = 60_000;
 
-/**
- * Polls the prices every 15 s and exposes a manual refresh with a 60 s cooldown.
- * The effect calls the async load() directly; nothing is set before its first await,
- * which the react/set-state-in-effect lint rule cannot see across the call, hence the disable below.
- */
 export function usePrices() {
   const [prices, setPrices] = useState<AggregatedPrice[]>([]);
   const [loadedAt, setLoadedAt] = useState<string | null>(null);
