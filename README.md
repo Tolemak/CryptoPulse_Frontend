@@ -1,5 +1,7 @@
 # CryptoPulse Frontend
 
+[![CI](https://github.com/Tolemak/CryptoPulse_Frontend/actions/workflows/deploy.yml/badge.svg?branch=main)](https://github.com/Tolemak/CryptoPulse_Frontend/actions/workflows/deploy.yml)
+
 Price ticker for [CryptoPulse_BackendDemo](https://github.com/Tolemak/CryptoPulse_BackendDemo): aggregated prices refreshed every 15 s plus a manual refresh button. React + TypeScript + Vite, PL/EN. [crypto-pulse.tolemak.pl](https://crypto-pulse.tolemak.pl/)
 
 [Polska wersja](README.pl.md)
