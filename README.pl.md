@@ -23,4 +23,4 @@ Uwagi:
 - `usePrices` odpytuje co 15 s i ma 60 s cooldown ręcznego odświeżenia (odliczanie jest zaokrąglane w górę, więc rozpoczęta sekunda pokazuje się jako pełna). Efekt wywołuje asynchroniczne `load()` bezpośrednio; nic nie jest ustawiane przed pierwszym `await`, czego reguła lint `react/set-state-in-effect` nie widzi przez wywołanie, stąd `oxlint-disable-next-line`.
 - Kropka pulsu miga raz przy każdym nowym komplecie cen; gdy API jest niedostępne, ostatnie ceny zostają, a tablica przygasa jak panel bez zasilania. Wygląd to tablica kursów walut: panel LCD w jasnym motywie, czerwona tablica LED w ciemnym.
 
-CI wrzuca zbudowany `dist/` na gałąź `build`, z której deployuje serwer.
+Po zielonych testach na `main` CI pakuje zbudowany `dist/` jako `ghcr.io/tolemak/cryptopulse-frontend-static:<sha commita>` (obraz `FROM scratch` z plikami w `/site`) z podpisanym poświadczeniem pochodzenia builda. Serwer sam go pobiera, weryfikuje poświadczenie i podmienia stronę jednym ruchem; CI nigdy się z nim nie łączy.
