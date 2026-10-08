@@ -2,7 +2,7 @@ import { createContext, useContext } from 'react';
 
 export type Lang = 'pl' | 'en';
 
-export const translations = {
+const translations = {
   pl: {
     app: {
       title: 'CryptoPulse',
@@ -113,7 +113,7 @@ export const LangContext = createContext<LangContextType>({
   setLang: () => {},
 });
 
-export const useLang = () => useContext(LangContext);
+const useLang = () => useContext(LangContext);
 
 export const useT = () => {
   const { lang } = useLang();
