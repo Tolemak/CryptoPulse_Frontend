@@ -59,12 +59,15 @@ describe('PriceTicker', () => {
   it('shows a loading state', () => {
     render(<PriceTicker prices={[]} loadedAt={null} loading={true} error={null} />);
 
+    expect(screen.getByText('Loading prices…')).toBeDefined();
     expect(document.querySelectorAll('.price-card')).toHaveLength(0);
   });
 
   it('shows an empty state when there is no data', () => {
     render(<PriceTicker prices={[]} loadedAt={null} loading={false} error={null} />);
 
+    expect(screen.getByText(/No price data yet/)).toBeDefined();
+    expect(screen.queryByText('Loading prices…')).toBeNull();
     expect(document.querySelectorAll('.price-card')).toHaveLength(0);
   });
 
@@ -109,6 +112,6 @@ describe('PriceTicker', () => {
     );
 
     expect(document.querySelector('.pct-down')).toBeNull();
-    expect(document.querySelector('.price-ath')?.textContent).toBeTruthy();
+    expect(document.querySelector('.price-ath')?.textContent).toBe('—');
   });
 });
