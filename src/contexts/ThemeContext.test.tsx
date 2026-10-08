@@ -53,6 +53,22 @@ describe('ThemeProvider', () => {
     expect(document.documentElement.getAttribute('data-theme')).toBe(toggled);
   });
 
+  it('keeps working when storage access throws', () => {
+    vi.spyOn(Storage.prototype, 'getItem').mockImplementation(() => {
+      throw new DOMException('blocked', 'SecurityError');
+    });
+    vi.spyOn(Storage.prototype, 'setItem').mockImplementation(() => {
+      throw new DOMException('blocked', 'SecurityError');
+    });
+
+    const { result } = renderHook(() => useTheme(), { wrapper });
+    const initial = result.current.theme;
+    act(() => result.current.toggleTheme());
+
+    expect(result.current.theme).toBe(initial === 'dark' ? 'light' : 'dark');
+    vi.restoreAllMocks();
+  });
+
   it('renders its children', () => {
     const { getByText } = render(<ThemeProvider><span>inside</span></ThemeProvider>);
 

@@ -63,6 +63,25 @@ describe('App', () => {
     expect(document.documentElement.lang).toBe('pl');
   });
 
+  it('renders and switches language when storage access throws', async () => {
+    vi.spyOn(Storage.prototype, 'getItem').mockImplementation(() => {
+      throw new DOMException('blocked', 'SecurityError');
+    });
+    vi.spyOn(Storage.prototype, 'setItem').mockImplementation(() => {
+      throw new DOMException('blocked', 'SecurityError');
+    });
+    render(<App />);
+    await waitFor(() => expect(document.querySelectorAll('.price-card')).toHaveLength(1));
+
+    act(() => {
+      document.querySelector('tolemak-bar')?.dispatchEvent(
+        new CustomEvent('tolemak-lang', { detail: { lang: 'pl' }, bubbles: true }),
+      );
+    });
+
+    expect(screen.getByRole('heading', { name: 'Ceny' })).toBeDefined();
+  });
+
   it('takes over the theme toggle from the status bar', async () => {
     render(<App />);
     await waitFor(() => expect(document.querySelectorAll('.price-card')).toHaveLength(1));
