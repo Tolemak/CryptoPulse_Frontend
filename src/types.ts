@@ -32,7 +32,7 @@ export type Pair =
 
 export type Exchange = 'binance' | 'kraken' | 'coinbase';
 
-export interface PriceQuote {
+interface PriceQuote {
   exchange: Exchange;
   pair: Pair;
   price: number;
