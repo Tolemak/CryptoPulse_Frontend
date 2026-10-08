@@ -72,14 +72,27 @@ function Dashboard() {
   );
 }
 
+function readStoredLang(): Lang {
+  try {
+    return localStorage.getItem('lang') === 'pl' ? 'pl' : 'en';
+  } catch {
+    return 'en';
+  }
+}
+
+function writeStoredLang(lang: Lang): void {
+  try {
+    localStorage.setItem('lang', lang);
+  } catch {
+    return;
+  }
+}
+
 function App() {
-  const [lang, setLangState] = useState<Lang>(() => {
-    const stored = localStorage.getItem('lang');
-    return stored === 'pl' ? 'pl' : 'en';
-  });
+  const [lang, setLangState] = useState<Lang>(readStoredLang);
 
   const setLang = useCallback<LangContextType['setLang']>((next) => {
-    localStorage.setItem('lang', next);
+    writeStoredLang(next);
     setLangState(next);
   }, []);
 
