@@ -2,9 +2,9 @@
 
 [![status: done](https://img.shields.io/badge/status-done-blue)](https://github.com/Tolemak/CryptoPulse_Frontend)
 
-Ticker cen do [CryptoPulse_BackendDemo](https://github.com/Tolemak/CryptoPulse_BackendDemo): zagregowane ceny odświeżane co 15 s plus ręczne odświeżanie. React + TypeScript + Vite, PL/EN. [crypto-pulse.tolemak.pl](https://crypto-pulse.tolemak.pl/)
-
 [English version](README.md)
+
+Ticker cen do [CryptoPulse_BackendDemo](https://github.com/Tolemak/CryptoPulse_BackendDemo): zagregowane ceny odświeżane co 15 s plus ręczne odświeżanie. React + TypeScript + Vite, PL/EN. [crypto-pulse.tolemak.pl](https://crypto-pulse.tolemak.pl/)
 
 ```bash
 npm install
