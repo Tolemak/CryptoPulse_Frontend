@@ -17,7 +17,7 @@ concurrency:
 
 jobs:
   ci:
-    uses: Tolemak/.github/.github/workflows/node-ci.yml@c2cb527de1abeb7ad38907fb52dfb1c9cedbbcec # v1.4.0
+    uses: Tolemak/.github/.github/workflows/node-ci.yml@c12fe1c8601ec7a140073fe2ac0b7840a3ccabc4 # v1.5.0
     with:
       node-version: "22"
       test-command: npm run test:coverage
